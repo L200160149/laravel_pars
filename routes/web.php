@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController');
 
+
+Route::get('/posts', 'PostController@index');
+
 // // detail menggunakan slug
 // Route::get('/posts/{slug}', 'PostController@show');
 // detail menggunakan id (akses model = /posts/{post}) dan bisa menggunakan slug tetapi ditambahkan key:slug (sesuai kolom tabel database)
