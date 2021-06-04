@@ -1,0 +1,25 @@
+php artisan make:migration create_posts_table
+
+php artisan make:model Post -mc
+	- membuat model, migration dan controller
+
+tinker :
+	factory('App\User',5)->create();
+		- untuk dummy data ke tabel user
+
+php artisan make:factory PostFactory -m Post
+	(membuat post factory mengacu pada Post Model)
+
+*Membuat custom function model diikuti dengan scopeFunction()
+
+eloquent :
+	Post::fisrt(); 			(select data pertama)
+	Post::find(1); 			(select 1 data)
+	Post::latest()->first(); 	(select 1 data terakhir)
+	Post::get(); 			(select all data);
+	Post:: latest()->get(); 	(select all data dari timestamp terakhir)
+	Post::orderBy('created_at', 'asc')->get(); (select all data dari kolom created_at asc)
+	Post::orderBy('created_at', 'desc')->get(); (select all data dari kolom created_at desc)
+	Post::latest()->limit(5);	(select 5 latest post)
+	Post::take(5)->get();		(select 5 post)
+	Post::paginate(2);		(membuat 2 post per halaman)
