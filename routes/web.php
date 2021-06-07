@@ -32,11 +32,17 @@ Route::post('/posts/store', 'PostController@store');
 Route::get('/posts/{post:slug}/edit', 'PostController@edit');
 Route::patch('/posts/{post:slug}/edit', 'PostController@update');
 
+// delete
+Route::delete('/posts/{post:slug}/delete', 'PostController@delete');
+
 
 // // detail menggunakan slug
 // Route::get('/posts/{slug}', 'PostController@show');
 // detail menggunakan id (akses model = /posts/{post}) dan bisa menggunakan slug tetapi ditambahkan key:slug (sesuai kolom tabel database)
 Route::get('/posts/{post:slug}', 'PostController@show');
+
+
+Route::get('/category/{post:slug}', 'CategoryController@show');
 
 
 Route::get('/contact', function () {

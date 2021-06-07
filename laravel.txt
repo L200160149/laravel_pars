@@ -1,5 +1,13 @@
 php artisan make:migration create_posts_table
 
+#Relasi one to many
+php artisan make:migration add_category_id_to_posts_table
+	- menambahkan migration baru dengan kolom category_id ke tabel posts
+$table->foreignId('category_id');
+$table->dropColumn('category_id);
+		->nullable()->after('id')
+
+
 php artisan make:model Post -mc
 	- membuat model, migration dan controller
 

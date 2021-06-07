@@ -36,7 +36,7 @@ class PostController extends Controller
         return view('posts.show', compact('post'));
     }
 
-    public function create() 
+    public function create()
     {
         return view('posts.create');
     }
@@ -44,7 +44,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         // validasi
-        $request->validate([
+        $attr = request()->validate([
             'title' => 'required|min:3|max:100',
             'body' => 'required'
         ]);
@@ -57,11 +57,10 @@ class PostController extends Controller
         // $post->save();
 
         // // ================= Cara 2 =====================
-        Post::create([
-            'title' => $request->title,
-            'slug' => \Str::slug($request->title),
-            'body' => $request->body
-        ]);
+
+        $attr['slug'] = \Str::slug(request('title'));
+
+        Post::create($attr);
 
         // // ================= Cara 3  =====================
         //     // jika tidak terdapat slug
@@ -72,7 +71,7 @@ class PostController extends Controller
         // Post::create($post);
 
         // // ================= Cara 4 (clean code dengan validasi)  =====================
-                // =============== dengan syarat semua field harus ada validasinya ======================
+        // =============== dengan syarat semua field harus ada validasinya ======================
         // $attr = $request->validate([
         //     'title' => 'required|min:3|max:100',
         //     'body' => 'required'
@@ -81,6 +80,14 @@ class PostController extends Controller
         // $attr['slug'] = \Str::slug($request->title);
 
         // Post::create($attr);
+
+
+        // // =================== Cara 5 =========================
+        // Post::create([
+        //     'title' => $request->title,
+        //     'slug' => \Str::slug($request->title),
+        //     'body' => $request->body
+        // ]);
 
 
         session()->flash('success', 'Post berhasil ditambahkan.');
@@ -103,6 +110,15 @@ class PostController extends Controller
         $post->update($attr);
 
         session()->flash('success', 'Post berhasil diupdate.');
+
+        return redirect()->to('posts');
+    }
+
+    public function delete(Post $post)
+    {
+        $post->delete();
+
+        session()->flash('success', 'Post berhasil dihapus.');
 
         return redirect()->to('posts');
     }
