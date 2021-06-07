@@ -26,6 +26,14 @@ eloquent :
 	Post::paginate(2);		(membuat 2 post per halaman)
 
 
+FYI :
+	@forelse ($posts as $post)
+		-- condition
+	@empty
+		-- condition
+	@endforelse
+
+
 +++++++ Tips +++++++
 Limit text :
 	Str::limit($text, 10, '..')
@@ -37,3 +45,7 @@ Date Format :
 	$post->created_at->format('d M, Y') = 7 Jun, 2021
 	$post->created_at->format('d F, Y') = 7 June, 2021
 	$post->created_at->diffForHumans()  = 38 minutes ago
+
+Redirect :
+	return back();
+		- back to the page before

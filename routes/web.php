@@ -24,10 +24,20 @@ Route::get('/', 'HomeController');
 
 Route::get('/posts', 'PostController@index');
 
+// insert
+Route::get('/posts/create', 'PostController@create');
+Route::post('/posts/store', 'PostController@store');
+
+// update
+Route::get('/posts/{post:slug}/edit', 'PostController@edit');
+Route::patch('/posts/{post:slug}/edit', 'PostController@update');
+
+
 // // detail menggunakan slug
 // Route::get('/posts/{slug}', 'PostController@show');
 // detail menggunakan id (akses model = /posts/{post}) dan bisa menggunakan slug tetapi ditambahkan key:slug (sesuai kolom tabel database)
 Route::get('/posts/{post:slug}', 'PostController@show');
+
 
 Route::get('/contact', function () {
     return view('contact');
