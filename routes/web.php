@@ -42,7 +42,7 @@ Route::delete('/posts/{post:slug}/delete', 'PostController@delete');
 Route::get('/posts/{post:slug}', 'PostController@show');
 
 
-Route::get('/category/{post:slug}', 'CategoryController@show');
+Route::get('categories/{category:slug}', 'CategoryController@show');
 
 
 Route::get('/contact', function () {
