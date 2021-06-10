@@ -5,10 +5,16 @@
         <div class="d-flex justify-content-between">
             <div>
                 @isset ($category)
-                <h4>Category : {{ $category->name }}</h4>
-                @else
-                <h4>All Posts</h4>
+                    <h4>Category : {{ $category->name }}</h4>
                 @endisset
+                
+                @isset($tag)
+                    <h4>Tags : {{ $tag->name }}</h4>
+                @endisset
+
+                @if (!isset($category) && !isset($tag))
+                    <h4>All Posts</h4>
+                @endif
                 <hr>
             </div>
             <div>

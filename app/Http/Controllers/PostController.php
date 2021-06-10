@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use Illuminate\Http\Request;
 use App\Post;
+use App\Tag;
 
 class PostController extends Controller
 {
@@ -38,7 +40,13 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('posts.create');
+        return view('posts.create', [
+            'post' => new Post(),
+            // mengambil data kategori dari database
+            'categories' => Category::get(),
+            // mengambil data tag dari database
+            'tags' => Tag::get()
+        ]);
     }
 
     public function store(Request $request)
@@ -46,9 +54,10 @@ class PostController extends Controller
         // validasi
         $attr = request()->validate([
             'title' => 'required|min:3|max:100',
-            'body' => 'required'
+            'body' => 'required',
+            'category' => 'required',
+            'tags' => 'array|required'
         ]);
-
         // // ================= Cara 1 =====================
         // $post = new Post;
         // $post->title = $request->title;
@@ -60,7 +69,16 @@ class PostController extends Controller
 
         $attr['slug'] = \Str::slug(request('title'));
 
-        Post::create($attr);
+        // input category_id ke tabel posts
+        $attr['category_id'] = request('category');
+
+        $post = Post::create($attr);
+
+
+        // input category_id ke tabel posts
+        $post->tags()->attach(request('tags'));
+
+
 
         // // ================= Cara 3  =====================
         //     // jika tidak terdapat slug
@@ -97,17 +115,29 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        return view('posts.edit', compact('post'));
+        return view('posts.edit', [
+            'post' => $post,
+            // mengambil data kategori dari database
+            'categories' => Category::get(),
+            // mengambil data tag dari database
+            'tags' => Tag::get()
+        ]);
     }
 
     public function update(Post $post)
     {
         $attr = request()->validate([
             'title' => 'required|min:3|max:100',
-            'body' => 'required'
+            'body' => 'required',
+            'category' => 'required',
+            'tags' => 'array|required'
         ]);
 
+        $attr['category_id'] = request('category');
+
         $post->update($attr);
+        // input category_id ke tabel posts
+        $post->tags()->sync(request('tags'));
 
         session()->flash('success', 'Post berhasil diupdate.');
 
@@ -116,6 +146,9 @@ class PostController extends Controller
 
     public function delete(Post $post)
     {
+        // menghapus relasi many to many
+        $post->tags()->detach();
+
         $post->delete();
 
         session()->flash('success', 'Post berhasil dihapus.');

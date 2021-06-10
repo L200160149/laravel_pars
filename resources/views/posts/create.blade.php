@@ -23,6 +23,40 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="category">Category</label>
+                            <select name="category" id="category" class="form-control select2search">
+                                <option disabled selected>-- Pilih Kategori --</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('category')
+                                <div class="text-danger mt-2">
+                                    {{ $message }}
+                                    {{-- atau --}}
+                                    {{-- Title harus diisi --}}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tags">Tag</label>
+                            <select name="tags[]" id="tags" class="form-control select2" multiple>
+                                {{-- <option disabled selected>-- Pilih Tags --</option> --}}
+                                @foreach ($tags as $tag)
+                                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('tags')
+                                <div class="text-danger mt-2">
+                                    {{ $message }}
+                                    {{-- atau --}}
+                                    {{-- Title harus diisi --}}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
                             <label for="body">Description</label>
                             <textarea name="body" id="body" class="form-control">{{ old('body') }}</textarea>
                             @error('body')
