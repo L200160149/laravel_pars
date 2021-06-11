@@ -60,3 +60,18 @@ Date Format :
 Redirect :
 	return back();
 		- back to the page before
+
+@guest :
+	middleware untuk cek apakah pengunjung sudah login atau belum
+
+
+
+
+Auth :
+1.
+	- composer require laravel/ui --dev
+	atau
+	- composer require laravel/ui:^2.4 --dev
+
+2.
+	-  php artisan ui bootstrap/vue --auth
