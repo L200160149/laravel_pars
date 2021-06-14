@@ -18,7 +18,9 @@
                 <hr>
             </div>
             <div>
-                <a href="/posts/create" class="btn btn-primary">New Post</a>
+                @if(Auth::check()   )
+                    <a href="/posts/create" class="btn btn-primary">New Post</a>
+                @endif
             </div>
         </div>
 
@@ -49,13 +51,22 @@
                     <div class="card-footer d-flex justify-content-between">
                         <div>
                             Published on {{ $post->created_at->format('d F, Y') }}
-
-                            <a href="/posts/{{$post->slug}}/edit" class="btn btn-sm btn-secondary">Edit</a>
-
-                            <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal">
-                                Delete
-                            </button>
+                            <br>
+                            Author : {{ $post->author->username }}
+                            
+                            {{-- cara 1 membatasi hak akses --}}
+                            {{-- @if(auth()->user()->id == $post->user_id) --}}
+                            {{-- cara 2 membatasi hak akses --}}
+                            {{-- @if(auth()->user()->is($post->author)) --}}
+                            {{-- cara 3 menggunakan policy --}}
+                            @can('update', $post)
+                                <a href="/posts/{{$post->slug}}/edit" class="btn btn-sm btn-secondary">Edit</a>
+                                
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal">
+                                    Delete
+                                </button>
+                            @endcan
                             
                             <!-- Modal -->
                             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -19,27 +19,22 @@ use Illuminate\Support\Facades\Route;
 //     return view('home');
 // });
 
-Route::get('/', 'HomeController');
 
-
-Route::get('/posts', 'PostController@index');
-
-// insert
-Route::get('/posts/create', 'PostController@create');
-Route::post('/posts/store', 'PostController@store');
-
-// update
-Route::get('/posts/{post:slug}/edit', 'PostController@edit');
-Route::patch('/posts/{post:slug}/edit', 'PostController@update');
-
-// delete
-Route::delete('/posts/{post:slug}/delete', 'PostController@delete');
-
-
-// // detail menggunakan slug
-// Route::get('/posts/{slug}', 'PostController@show');
-// detail menggunakan id (akses model = /posts/{post}) dan bisa menggunakan slug tetapi ditambahkan key:slug (sesuai kolom tabel database)
-Route::get('/posts/{post:slug}', 'PostController@show');
+// // // menggunakan name routing dan memberi hak akses pada function controller
+// // Route::get('/posts', 'PostController@index')->middleware('auth')->name('posts.index');
+// Route::get('/posts', 'PostController@index')->middleware('auth')->name('posts.index');
+// // insert
+// Route::get('/posts/create', 'PostController@create')->name('posts.create');
+// Route::post('/posts/store', 'PostController@store');
+// // update
+// Route::get('/posts/{post:slug}/edit', 'PostController@edit');
+// Route::patch('/posts/{post:slug}/edit', 'PostController@update');
+// // delete
+// Route::delete('/posts/{post:slug}/delete', 'PostController@delete');
+// // // detail menggunakan slug
+// // Route::get('/posts/{slug}', 'PostController@show');
+// // detail menggunakan id (akses model = /posts/{post}) dan bisa menggunakan slug tetapi ditambahkan key:slug (sesuai kolom tabel database)
+// Route::get('/posts/{post:slug}', 'PostController@show');
 
 
 Route::get('categories/{category:slug}', 'CategoryController@show');
@@ -53,3 +48,23 @@ Route::get('/contact', function () {
 
 Route::view('/login', 'login');
 Route::view('/about', 'about');
+
+Auth::routes();
+
+Route::get('/', 'HomeController@index')->name('home');
+
+Route::middleware('auth')->group(function() {
+    Route::get('/posts', 'PostController@index')->name('posts.index')->withoutMiddleware('auth');
+    // insert
+    Route::get('/posts/create', 'PostController@create')->name('posts.create');
+    Route::post('/posts/store', 'PostController@store');
+    // update
+    Route::get('/posts/{post:slug}/edit', 'PostController@edit');
+    Route::patch('/posts/{post:slug}/edit', 'PostController@update');
+    // delete
+    Route::delete('/posts/{post:slug}/delete', 'PostController@delete');
+    // // detail menggunakan slug
+    // Route::get('/posts/{slug}', 'PostController@show');
+    // detail menggunakan id (akses model = /posts/{post}) dan bisa menggunakan slug tetapi ditambahkan key:slug (sesuai kolom tabel database)
+    Route::get('/posts/{post:slug}', 'PostController@show')->withoutMiddleware('auth');
+});

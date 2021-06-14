@@ -64,8 +64,17 @@ Redirect :
 @guest :
 	middleware untuk cek apakah pengunjung sudah login atau belum
 
+Route::prefix('posts)->group(function() {}) :
+	(web.php) berfungsi untuk menyingkat url yang sama di dalam route
+
+Name Routing :
+	berfungsi untuk membuat routing/url
+		Route::...->name('posts/create')
 
 
+Seeder :
+	php artisan make:seed CategoriesTableSeeder
+		php artisan db:seed --class=CategoriesTableSeeder
 
 Auth :
 1.
@@ -75,3 +84,18 @@ Auth :
 
 2.
 	-  php artisan ui bootstrap/vue --auth
+
+
+- Middleware : berfungsi untuk membatasi hak akses
+	cara 1 :
+		- @auth ...(condition)... @endauth
+	cara 2 :
+		- if(Auth::check()) ... (condition)... endif
+	cara 3 :
+		- @if(auth()->user()->is($post->author))
+
+- Cara membatasi hak akses :
+	cara 1 : 
+		- membuat middleware di construct controller
+	cara 2 :
+		- membuat middleware di route/web.php

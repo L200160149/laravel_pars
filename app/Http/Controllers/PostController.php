@@ -10,6 +10,14 @@ use App\Tag;
 class PostController extends Controller
 {
 
+    public function __construct()
+    {
+        // validasi selain function index dan show maka pengunjung harus login
+        // $this->middleware('auth')->except([
+        //     'index', 'show'
+        // ]);
+    }
+
     public function index()
     {
         $posts = Post::latest()->paginate(6);
@@ -68,11 +76,15 @@ class PostController extends Controller
         // // ================= Cara 2 =====================
 
         $attr['slug'] = \Str::slug(request('title'));
-
+        
         // input category_id ke tabel posts
         $attr['category_id'] = request('category');
 
-        $post = Post::create($attr);
+        // // cara sebelum input session id
+        // $post = Post::create($attr);
+
+        // input session id
+        $post = auth()->user()->posts()->create($attr);
 
 
         // input category_id ke tabel posts
@@ -126,6 +138,9 @@ class PostController extends Controller
 
     public function update(Post $post)
     {
+        // cek hanya author yang bisa edit postnya (menggunakan policy)
+        $this->authorize('update', $post);
+
         $attr = request()->validate([
             'title' => 'required|min:3|max:100',
             'body' => 'required',
@@ -146,13 +161,26 @@ class PostController extends Controller
 
     public function delete(Post $post)
     {
-        // menghapus relasi many to many
-        $post->tags()->detach();
+        // // cara 1 = menghapus relasi many to many
+        // $post->tags()->detach();
+        // $post->delete();
+        // session()->flash('success', 'Post berhasil dihapus.');
+        // return redirect()->to('posts');
 
-        $post->delete();
+        // cara 2 = menghapus post sendiri
+        if(auth()->user()->is($post->author)) {
+            $post->tags()->detach();
+            $post->delete();
+            session()->flash('success', 'Post berhasil dihapus.');
+            return redirect()->to('posts');
+        } else {
+            session()->flash('success', 'Itu bukan postmu.');
+            return redirect()->to('posts');
+        }
 
-        session()->flash('success', 'Post berhasil dihapus.');
-
-        return redirect()->to('posts');
+        // // cara 3 = menggunakan policy (sama seperti cara 2 hanya lebih singkat codenya)
+        // $this->authorize('update', $post);
+        // session()->flash("success", "Post berhasil dihapus");
+        // return redirect('posts');
     }
 }
