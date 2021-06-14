@@ -46,6 +46,10 @@ FYI :
 
 
 +++++++ Tips +++++++
+New Line Break :
+	{!! nl2br !!} = tanpa htmlspecialchars
+	{{ nl2br }} = dengan htmlspecialchars
+	
 Limit text :
 	Str::limit($text, 10, '..')
 
@@ -99,3 +103,7 @@ Auth :
 		- membuat middleware di construct controller
 	cara 2 :
 		- membuat middleware di route/web.php
+
+- Upload Image
+	- php artisan storage:link
+		untuk membuat/duplikat image folder to public (sebelumnya image folder berada di storage folder)

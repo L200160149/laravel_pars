@@ -8,8 +8,16 @@
             <div class="card">
                 <div class="card-header">New Post</div>
                 <div class="card-body">
-                    <form action="/posts/store" method="post">
+                    <form action="/posts/store" method="post" enctype="multipart/form-data">
                         @csrf
+                        <div class="form-group">
+                            <input type="file" name="thumbnail" id="thumbnail">
+                            @error('thumbnail')
+                                <div class="text-danger mt-2">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                         <div class="form-group">
                             <label for="title">Title</label>
                             <input type="text" name="title" value="{{ old('title') }}" class="form-control @error('title') is-invalid @enderror">

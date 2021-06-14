@@ -13,6 +13,9 @@
                 <a href="/tags/{{ $tag->slug }}">{{ $tag->name }}</a>
             @endforeach
         </div>
+        <br>
+        Author :
+        <img src="{{ $post->author->gravatar() }}" alt="">
         <hr>
 
         <p>{{$post->body}}</p>

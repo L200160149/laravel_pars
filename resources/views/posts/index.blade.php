@@ -41,6 +41,7 @@
                         </div>
                     </div>
 
+                    <img class="card-img-top" src="{{ asset("storage/" . $post->thumbnail) }}" alt="">
                     <div class="card-body">
                         <div>
                             {{ Str::limit($post->body, 25, '...') }}

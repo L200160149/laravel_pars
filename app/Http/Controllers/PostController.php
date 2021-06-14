@@ -64,7 +64,8 @@ class PostController extends Controller
             'title' => 'required|min:3|max:100',
             'body' => 'required',
             'category' => 'required',
-            'tags' => 'array|required'
+            'tags' => 'array|required',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg|max:2048'
         ]);
         // // ================= Cara 1 =====================
         // $post = new Post;
@@ -75,10 +76,24 @@ class PostController extends Controller
 
         // // ================= Cara 2 =====================
 
-        $attr['slug'] = \Str::slug(request('title'));
+        $slug = \Str::slug(request('title'));
+        $attr['slug'] = $slug;
+
+        // upload image
+        if(request()->file('thumbnail')) {
+            $thumbnail = request()->file('thumbnail');
+            // // cara 1 upload image (dengan judul file slug dan ekstensi)
+            // $thumbnailUrl = $thumbnail->storeAs("image/posts", "{$slug}.{$thumbnail->extension()}");
+            // cara 2 upload image (dengan random judul file)
+            $thumbnailUrl = $thumbnail->store("image/posts");
+        } else {
+            $thumbnailUrl = null;
+        }
         
         // input category_id ke tabel posts
         $attr['category_id'] = request('category');
+        // input image
+        $attr['thumbnail'] = $thumbnailUrl;
 
         // // cara sebelum input session id
         // $post = Post::create($attr);
@@ -141,14 +156,27 @@ class PostController extends Controller
         // cek hanya author yang bisa edit postnya (menggunakan policy)
         $this->authorize('update', $post);
 
+        // upload image
+        // hapus image jika ada
+        if(request()->file('thumbnail')) {
+            \Storage::delete($post->thumbnail);
+            $thumbnail = request()->file('thumbnail');
+            $thumbnailUrl = $thumbnail->store("image/posts");
+        } else {
+            $thumbnail = $post->thumbnail;
+        }
+
         $attr = request()->validate([
             'title' => 'required|min:3|max:100',
             'body' => 'required',
             'category' => 'required',
-            'tags' => 'array|required'
+            'tags' => 'array|required',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         $attr['category_id'] = request('category');
+        // upload image
+        $attr['thumbnail'] = $thumbnailUrl;
 
         $post->update($attr);
         // input category_id ke tabel posts
@@ -161,6 +189,9 @@ class PostController extends Controller
 
     public function delete(Post $post)
     {
+        // hapus image
+        \Storage::delete($post->thumbnail);
+
         // // cara 1 = menghapus relasi many to many
         // $post->tags()->detach();
         // $post->delete();
