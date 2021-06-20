@@ -80,7 +80,7 @@ class PostController extends Controller
         $attr['slug'] = $slug;
 
         // upload image
-        if(request()->file('thumbnail')) {
+        if (request()->file('thumbnail')) {
             $thumbnail = request()->file('thumbnail');
             // // cara 1 upload image (dengan judul file slug dan ekstensi)
             // $thumbnailUrl = $thumbnail->storeAs("image/posts", "{$slug}.{$thumbnail->extension()}");
@@ -89,7 +89,7 @@ class PostController extends Controller
         } else {
             $thumbnailUrl = null;
         }
-        
+
         // input category_id ke tabel posts
         $attr['category_id'] = request('category');
         // input image
@@ -158,7 +158,7 @@ class PostController extends Controller
 
         // upload image
         // hapus image jika ada
-        if(request()->file('thumbnail')) {
+        if (request()->file('thumbnail')) {
             \Storage::delete($post->thumbnail);
             $thumbnail = request()->file('thumbnail');
             $thumbnailUrl = $thumbnail->store("image/posts");
@@ -199,7 +199,7 @@ class PostController extends Controller
         // return redirect()->to('posts');
 
         // cara 2 = menghapus post sendiri
-        if(auth()->user()->is($post->author)) {
+        if (auth()->user()->is($post->author)) {
             $post->tags()->detach();
             $post->delete();
             session()->flash('success', 'Post berhasil dihapus.');
